@@ -17,6 +17,7 @@
   "dependencies": {
     "@types/stripe": "^4.9.0",
     "node-fetch": "^1.7.3",
+    "serverless-plugin-cloudfront-lambda-edge": "^1.0.0",
     "stripe": "^5.4.0"
   }
 }

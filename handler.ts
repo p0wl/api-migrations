@@ -1,7 +1,7 @@
 import { stringify } from "querystring";
 import fetch from "node-fetch";
 
-import { prepare, postprocess } from "./src/index";
+import { prepare, postprocess as doPostProcess } from "./src/index";
 
 const baseURL = "https://api.stripe.com";
 const version = "2017-02-25";
@@ -36,13 +36,25 @@ export const migrate = (event, context, cb) => {
   })
     .then(res => res.json())
     .then(response => {
-      const postprocessed = postprocess({ request, response, version });
+      const postprocessed = doPostProcess({ request, response, version });
 
       cb(null, {
         statusCode: 200,
         body: JSON.stringify(postprocessed.response)
       });
     });
+};
+
+export const preprocess = (event, context, callback) => {
+  const request = event.Records[0].cf.request;
+  console.log("PREPROCESS GOT REQUEST", request);
+  callback(null, request);
+};
+
+export const postprocess = (event, context, callback) => {
+  const response = event.Records[0].cf.response;
+  console.log("POSTPROCESS GOT RESPONSE", response);
+  callback(null, response);
 };
 
 // require("./debug.js");
